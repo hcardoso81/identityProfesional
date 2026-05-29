@@ -443,6 +443,30 @@ $wpdb->prepare()
 
 Toda query con datos externos debe usar `$wpdb->prepare()`.
 
+### Uploads y archivos importados
+
+Para formularios de carga de archivos en admin:
+
+- Validar capability antes de procesar el request.
+- Validar nonce con `check_admin_referer()`.
+- No confiar en el nombre original del archivo.
+- Validar extension y MIME con `wp_check_filetype_and_ext()`.
+- Usar `wp_handle_upload()` o un mecanismo WordPress equivalente.
+- Definir un allowlist explicito de extensiones y MIME types.
+- Tratar errores de `$_FILES` antes de leer el archivo.
+- Eliminar archivos temporales/importados cuando ya no sean necesarios con `wp_delete_file()`.
+- No imprimir rutas absolutas ni detalles internos de errores al usuario final.
+- Sanitizar todo valor leido desde archivos antes de usarlo en dominio o base de datos.
+
+Para imports Excel:
+
+- Usar una libreria mantenida como PhpSpreadsheet mediante Composer cuando el proyecto lo permita.
+- Si la dependencia no esta instalada, fallar de forma controlada y documentar `composer install`.
+- Validar columnas requeridas antes de procesar filas.
+- Ignorar filas incompletas o con valores no reconocidos, registrando un resumen claro.
+- Normalizar datos antes de persistirlos.
+- Persistir conteos como enteros no negativos.
+
 ## AJAX y admin-post
 
 Para AJAX:
